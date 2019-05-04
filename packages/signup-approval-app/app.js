@@ -17,7 +17,7 @@ const producer = Producer.create({
 const { Consumer } = require("sqs-consumer");
 const consumer = Consumer.create({
   queueUrl: process.env.AWS_SQS_URL,
-  handleMessage: ({ Body }) => {
+  handleMessage: async ({ Body }) => {
     console.log(`received: ${Body}`);
     blacklist = [
       "thor",
@@ -29,13 +29,25 @@ const consumer = Consumer.create({
       "hawkeye"
     ];
     if (blacklist.includes(Body.toLowerCase())) {
-      producer.send({
-        body: `${Body} application denied!`
-      });
+      return producer.send(
+        {
+          id: `denied-${Body}`,
+          body: `${Body} application denied!`
+        },
+        function(err) {
+          if (err) console.log(err);
+        }
+      );
     } else {
-      producer.send({
-        body: `${Body} application approved!`
-      });
+      return producer.send(
+        {
+          id: `approved-${Body}`,
+          body: `${Body} application approved!`
+        },
+        function(err) {
+          if (err) console.log(err);
+        }
+      );
     }
   }
 });
@@ -51,5 +63,5 @@ consumer.on("timeout_error", err => {
 consumer.start();
 
 // keep app alive
-console.log("subscribed to roster application queue..")
+console.log("subscribed to roster application queue..");
 process.stdin.resume();

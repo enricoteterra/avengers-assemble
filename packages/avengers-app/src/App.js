@@ -1,17 +1,19 @@
 import React, { useState } from "react";
-import { useDataSubscription } from "./useDataSubscription";
+import { useSubscribeToRoster } from "./useSubscribeToRoster";
+import { usePublishToRoster } from "./usePublishToRoster";
 import logo from "./logo.svg";
 import "./App.css";
 
 function App() {
   const [name, setName] = useState("");
-  const knownAvengers = useDataSubscription([]);
+  const roster = useSubscribeToRoster([]);
+  const publishAvenger = usePublishToRoster();
 
   function handleNameChange(e) {
     setName(e.target.value);
   }
   function handleSubmit() {
-    console.log(name);
+    publishAvenger(name);
   }
 
   return (
@@ -21,14 +23,14 @@ function App() {
       </header>
       <div>
         <h2>Roster</h2>
-        {knownAvengers.length ? (
-          knownAvengers.map(avenger => <p key={avenger}>{avenger}</p>)
+        {roster.length ? (
+          roster.map(avenger => <p key={avenger}>{avenger}</p>)
         ) : (
-          <p>no avengers signed up yet!</p>
+          <p>no avengers signed up yet</p>
         )}
       </div>
       <div>
-        <h2>Become an Avenger</h2>
+        <h2>Become an Avenger today!</h2>
         <input
           autoFocus
           name="avenger-name"

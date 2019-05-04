@@ -17,7 +17,7 @@ function reducer(state, { type, payload }) {
   }
 }
 
-export const useDataSubscription = initialValue => {
+export const useSubscribeToRoster = initialValue => {
   const [knownAvengers, dispatchKnownAvengers] = useReducer(
     reducer,
     initialValue
@@ -25,9 +25,8 @@ export const useDataSubscription = initialValue => {
   useEffect(() => {
     const app = Consumer.create({
       queueUrl: process.env.REACT_APP_AWS_SQS_URL,
-      handleMessage: function handleMessage({Body}) {
-        dispatchKnownAvengers({ type: "add", payload: Body });
-      }
+      handleMessage: ({ Body }) =>
+        dispatchKnownAvengers({ type: "add", payload: Body })
     });
     app.on("error", err => {
       console.error(err.message);

@@ -8,7 +8,7 @@ require("aws-sdk").config.update({
 
 const Producer = require("sqs-producer");
 const producer = Producer.create({
-  queueUrl: process.env.AWS_SQS_URL,
+  queueUrl: process.env.AWS_ROSTER_APPLICATION_FEEDBACK_URL,
   region: process.env.AWS_REGION,
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
@@ -16,7 +16,7 @@ const producer = Producer.create({
 
 const { Consumer } = require("sqs-consumer");
 const consumer = Consumer.create({
-  queueUrl: process.env.AWS_SQS_URL,
+  queueUrl: process.env.AWS_ROSTER_APPLICATION_SUBMISSIONS_URL,
   handleMessage: async ({ Body }) => {
     console.log(`received: ${Body}`);
     blacklist = [
@@ -29,6 +29,7 @@ const consumer = Consumer.create({
       "hawkeye"
     ];
     if (blacklist.includes(Body.toLowerCase())) {
+      console.log(`denied: ${Body}`);
       return producer.send(
         {
           id: `denied-${Body}`,
@@ -39,6 +40,7 @@ const consumer = Consumer.create({
         }
       );
     } else {
+      console.log(`approved: ${Body}`);
       return producer.send(
         {
           id: `approved-${Body}`,

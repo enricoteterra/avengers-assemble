@@ -1,4 +1,4 @@
-import { useReducer, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Consumer } from "sqs-consumer";
 import AWS from "aws-sdk";
 
@@ -8,28 +8,13 @@ AWS.config.update({
   secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY
 });
 
-function reducer(set, { type, payload }) {
-  switch (type) {
-    case "add":
-      return new Set([...Array.from(set), payload]);
-    default:
-      throw new Error(`action '${type}' not found in reducer`);
-  }
-}
-
-export const useSubscribeToRoster = initialValue => {
-  const [knownAvengers, dispatchKnownAvengers] = useReducer(
-    reducer,
-    initialValue
-  );
+export const useSubscribeToApplicationFeedback = initialValue => {
+  const [applicationFeedback, setApplicationFeedback] = useState(initialValue);
   useEffect(
     () => {
       const app = Consumer.create({
-        queueUrl: process.env.REACT_APP_AWS_SQS_URL,
-        handleMessage: ({ Body }) => {
-          console.log(Body);
-          dispatchKnownAvengers({ type: "add", payload: Body });
-        }
+        queueUrl: process.env.REACT_APP_AWS_ROSTER_APPLICATION_FEEDBACK_URL,
+        handleMessage: ({ Body }) => setApplicationFeedback(Body)
       });
       app.on("error", err => {
         console.error(err.message);
@@ -46,5 +31,5 @@ export const useSubscribeToRoster = initialValue => {
     },
     [] // never recreate consumer between rerenders
   );
-  return knownAvengers;
+  return applicationFeedback;
 };

@@ -12,8 +12,10 @@ function App() {
   function handleNameChange(e) {
     setName(e.target.value);
   }
-  function handleSubmit() {
+  function handleSubmit(e) {
+    e.preventDefault();
     publishAvenger(name);
+    setName("");
   }
 
   return (
@@ -21,15 +23,15 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
       </header>
-      <div>
+      <div className="roster">
         <h2>Roster</h2>
-        {roster.length ? (
-          roster.map(avenger => <p key={avenger}>{avenger}</p>)
+        {roster.size ? (
+          Array.from(roster).map(avenger => <p key={avenger}>{avenger}</p>)
         ) : (
           <p>no avengers signed up yet</p>
         )}
       </div>
-      <div>
+      <form className="signup-form" onSubmit={handleSubmit}>
         <h2>Become an Avenger today!</h2>
         <input
           autoFocus
@@ -37,8 +39,8 @@ function App() {
           value={name}
           onChange={handleNameChange}
         />
-        <button onClick={handleSubmit}>Sign up</button>
-      </div>
+        <button type="submit">Sign up</button>
+      </form>
     </div>
   );
 }

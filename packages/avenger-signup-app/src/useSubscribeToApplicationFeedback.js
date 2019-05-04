@@ -14,7 +14,15 @@ export const useSubscribeToApplicationFeedback = initialValue => {
     () => {
       const app = Consumer.create({
         queueUrl: process.env.REACT_APP_AWS_ROSTER_APPLICATION_FEEDBACK_URL,
-        handleMessage: ({ Body }) => setApplicationFeedback(Body)
+        handleMessage: ({ Body, MessageAttributes }) =>
+          setApplicationFeedback({
+            name: Body,
+            decision: MessageAttributes.decision.StringValue,
+            fault: MessageAttributes.fault
+              ? MessageAttributes.fault.StringValue
+              : undefined
+          }),
+        messageAttributeNames: ["decision", "fault"]
       });
       app.on("error", err => {
         console.error(err.message);

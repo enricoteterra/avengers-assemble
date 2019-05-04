@@ -30,10 +30,20 @@ const consumer = Consumer.create({
     ];
     if (blacklist.includes(Body.toLowerCase())) {
       console.log(`denied: ${Body}`);
-      return producer.send(
+      producer.send(
         {
-          id: `denied-${Body}`,
-          body: `${Body} application denied!`
+          id: Body,
+          body: Body,
+          messageAttributes: {
+            decision: {
+              DataType: "String",
+              StringValue: "denied"
+            },
+            fault: {
+              DataType: "String",
+              StringValue: `Name ${Body} is already taken! Pick another name`
+            }
+          }
         },
         function(err) {
           if (err) console.log(err);
@@ -41,10 +51,16 @@ const consumer = Consumer.create({
       );
     } else {
       console.log(`approved: ${Body}`);
-      return producer.send(
+      producer.send(
         {
-          id: `approved-${Body}`,
-          body: `${Body} application approved!`
+          id: Body,
+          body: Body,
+          messageAttributes: {
+            decision: {
+              DataType: "String",
+              StringValue: "approved"
+            }
+          }
         },
         function(err) {
           if (err) console.log(err);

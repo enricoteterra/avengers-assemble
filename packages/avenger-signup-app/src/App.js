@@ -6,7 +6,7 @@ import "./App.css";
 
 function App() {
   const [name, setName] = useState("");
-  const applicationFeedback = useSubscribeToApplicationFeedback([]);
+  const applicationFeedback = useSubscribeToApplicationFeedback();
   const sendApplication = usePublishToApplicationSubmissions();
 
   function handleNameChange(e) {
@@ -24,12 +24,12 @@ function App() {
         <img src={logo} className="App-logo" alt="logo" />
       </header>
       <div className="roster">
-        {JSON.stringify(applicationFeedback)}
-        {/* {roster.size ? (
-          Array.from(roster).map(avenger => <p key={avenger}>{avenger}</p>)
-        ) : (
-          <p>no avengers signed up yet</p>
-        )} */}
+        {applicationFeedback && (
+          <div className={`feedback ${applicationFeedback.decision}`}>
+            [{applicationFeedback.decision}]&nbsp;
+            {applicationFeedback.fault}
+          </div>
+        )}
       </div>
       <form className="signup-form" onSubmit={handleSubmit}>
         <h2>Become an Avenger today!</h2>

@@ -17,6 +17,14 @@
   color: #61dafb;
 }
 
-.roster {
-  margin-bottom: 3em;
+.feedback {
+  margin-top: 3em;
+}
+
+.feedback.approved {
+  color: green;
+}
+
+.feedback.denied {
+  color: red;
 }

@@ -41,7 +41,7 @@ const consumer = Consumer.create({
             },
             fault: {
               DataType: "String",
-              StringValue: `Name ${Body} is already taken! Pick another name`
+              StringValue: `Name ${Body} is already taken`
             }
           }
         },

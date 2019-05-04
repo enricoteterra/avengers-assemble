@@ -5,9 +5,12 @@ import logo from "./logo.svg";
 import "./App.css";
 
 function App() {
-  const [name, setName] = useState("");
-  const applicationFeedback = useSubscribeToApplicationFeedback();
+  const [
+    applicationFeedback,
+    setApplicationFeedback
+  ] = useSubscribeToApplicationFeedback();
   const sendApplication = usePublishToApplicationSubmissions();
+  const [name, setName] = useState("");
 
   function handleNameChange(e) {
     setName(e.target.value);
@@ -17,20 +20,17 @@ function App() {
     sendApplication(name);
     setName("");
   }
+  function handleClose(e) {
+    sendApplication(name);
+    setApplicationFeedback("");
+  }
 
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
       </header>
-      <div className="roster">
-        {applicationFeedback && (
-          <div className={`feedback ${applicationFeedback.decision}`}>
-            [{applicationFeedback.decision}]&nbsp;
-            {applicationFeedback.fault}
-          </div>
-        )}
-      </div>
+        
       <form className="signup-form" onSubmit={handleSubmit}>
         <h2>Become an Avenger today!</h2>
         <input
@@ -41,6 +41,16 @@ function App() {
         />
         <button type="submit">Sign up</button>
       </form>
+
+      {applicationFeedback && (
+          <div className={`feedback ${applicationFeedback.decision}`}>
+            {applicationFeedback.decision}!&nbsp;
+            {applicationFeedback.fault}
+            <span className="closeButton" onClick={handleClose}>
+              (close)
+            </span>
+          </div>
+        )}
     </div>
   );
 }

@@ -39,5 +39,5 @@ export const useSubscribeToApplicationFeedback = initialValue => {
     },
     [] // never recreate consumer between rerenders
   );
-  return applicationFeedback;
+  return [applicationFeedback, setApplicationFeedback];
 };

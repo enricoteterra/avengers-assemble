@@ -18,7 +18,7 @@
 }
 
 .feedback {
-  margin-top: 3em;
+  margin-top: 2em;
 }
 
 .feedback.approved {
@@ -27,4 +27,9 @@
 
 .feedback.denied {
   color: red;
+}
+
+.closeButton {
+  padding: 0em 1em;
+  cursor: pointer;
 }

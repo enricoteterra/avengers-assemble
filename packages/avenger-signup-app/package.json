@@ -6,7 +6,8 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.0",
-    "sqs-consumer": "^5.2.0"
+    "sqs-consumer": "^5.2.0",
+    "sqs-producer": "^1.6.3"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -7,7 +7,7 @@ export const usePublishToApplicationSubmissions = () => {
     // generated api-side and returned
     // in the response to this post
     const token = shortid.generate();
-    fetch(`/api/application/${token}`, {
+    fetch(`/signup/application/${token}`, {
       method: "post",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

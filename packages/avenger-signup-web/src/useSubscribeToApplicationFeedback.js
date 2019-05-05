@@ -11,14 +11,17 @@ export const useSubscribeToApplicationFeedback = submissionToken => {
   const [applicationFeedback, setApplicationFeedback] = useState();
   useEffect(() => {
     const subscribe = () =>
+      // @TODO: submissionToken should be unset after feedback is received
+      // to prevent polling for feedback on the stale token
       !submissionToken ||
-      fetch(`/api/feedback/${submissionToken}`)
+      fetch(`/signup/feedback/${submissionToken}`)
         .then(response => response.json())
         .then(data => {
           setApplicationFeedback(data);
           setTimeout(subscribe, 1000);
         });
     subscribe();
+    // @TODO: check that long-poll is retriggered after request timeout
   }, [submissionToken]);
   return [applicationFeedback, setApplicationFeedback];
 };

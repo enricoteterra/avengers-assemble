@@ -7,8 +7,14 @@ require("aws-sdk").config.update({
 });
 
 const Producer = require("sqs-producer");
-const producer = Producer.create({
+const feedbackProducer = Producer.create({
   queueUrl: process.env.AWS_ROSTER_APPLICATION_FEEDBACK_URL,
+  region: process.env.AWS_REGION,
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+});
+const rosterProducer = Producer.create({
+  queueUrl: process.env.AWS_ROSTER_APPLICATION_ROSTER_URL,
   region: process.env.AWS_REGION,
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
@@ -32,7 +38,7 @@ const consumer = Consumer.create({
     ];
     if (blacklist.includes(Body.toLowerCase())) {
       console.log(`denied: ${Body}`);
-      producer.send(
+      feedbackProducer.send(
         {
           id: MessageId,
           body: Body,
@@ -57,7 +63,7 @@ const consumer = Consumer.create({
       );
     } else {
       console.log(`approved: ${Body}`);
-      producer.send(
+      feedbackProducer.send(
         {
           id: MessageId,
           body: Body,
@@ -71,6 +77,15 @@ const consumer = Consumer.create({
               StringValue: "approved"
             }
           }
+        },
+        function(err) {
+          if (err) console.log(err);
+        }
+      );
+      rosterProducer.send(
+        {
+          id: MessageId,
+          body: Body
         },
         function(err) {
           if (err) console.log(err);
@@ -91,5 +106,5 @@ consumer.on("timeout_error", err => {
 consumer.start();
 
 // keep app alive
-console.log("subscribed to roster application queue..");
+console.log("approval service started..");
 process.stdin.resume();

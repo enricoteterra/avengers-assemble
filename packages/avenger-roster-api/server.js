@@ -6,25 +6,24 @@ var app = express();
 app.use(bodyParser.json());
 
 var longpoll = require("express-longpoll")(app, { DEBUG: true });
-longpoll.create("/api/roster");
+longpoll.create("/roster/members");
 
 var port = 3021;
 app.listen(port, function() {
   console.log(`Listening on port ${port}`);
 });
 
+// @TODO: refactor to in-memory strategy
 const roster = new Array();
 
 var { Consumer } = require("sqs-consumer");
 const consumer = Consumer.create({
   queueUrl: process.env.AWS_ROSTER_APPLICATION_ROSTER_URL,
   handleMessage: message => {
-    // @TODO: change to reducer to handle all kinds of roster changes
-    const { MessageAttributes } = message;
-    if (MessageAttributes === undefined || MessageAttributes.name === undefined)
-      return;
-    roster.push(MessageAttributes.name.StringValue);
-    longpoll.publish("/api/roster", { roster });
+    // @TODO: change to reducer to handle all types of roster changes
+    const { Body } = message;
+    roster.push(Body);
+    longpoll.publish("/roster/members", { roster });
   }
 });
 consumer.on("error", err => {

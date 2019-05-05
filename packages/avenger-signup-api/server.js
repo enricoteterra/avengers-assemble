@@ -17,7 +17,7 @@ var express = require("express");
 var bodyParser = require("body-parser");
 var app = express();
 app.use(bodyParser.json());
-app.post("/api/application/:token", (req, res) => {
+app.post("/signup/application/:token", (req, res) => {
   console.log(`submitting application: ${req.body.name}`);
   producer.send(
     {
@@ -38,7 +38,7 @@ app.post("/api/application/:token", (req, res) => {
 });
 
 var longpoll = require("express-longpoll")(app, { DEBUG: true });
-longpoll.create("/api/feedback/:token", (req, _, next) => {
+longpoll.create("/signup/feedback/:token", (req, _, next) => {
   req.id = req.params.token;
   next();
 });
@@ -62,7 +62,7 @@ const consumer = Consumer.create({
     )
       return;
     return longpoll.publishToId(
-      "/api/feedback/:token",
+      "/signup/feedback/:token",
       MessageAttributes.submissionToken.StringValue,
       {
         id: MessageId,

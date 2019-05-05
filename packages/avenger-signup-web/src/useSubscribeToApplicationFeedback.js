@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { Consumer } from "sqs-consumer";
 import AWS from "aws-sdk";
 
 AWS.config.update({
@@ -10,36 +9,17 @@ AWS.config.update({
 
 export const useSubscribeToApplicationFeedback = initialValue => {
   const [applicationFeedback, setApplicationFeedback] = useState(initialValue);
-  useEffect(
-    () => {
-      const app = Consumer.create({
-        queueUrl: process.env.REACT_APP_AWS_ROSTER_APPLICATION_FEEDBACK_URL,
-        handleMessage: ({ Body, MessageAttributes }) =>
-          setApplicationFeedback({
-            name: Body,
-            decision: MessageAttributes.decision
-              ? MessageAttributes.decision.StringValue
-              : undefined,
-            fault: MessageAttributes.fault
-              ? MessageAttributes.fault.StringValue
-              : undefined
-          }),
-        messageAttributeNames: ["decision", "fault"]
+  useEffect(() => {
+    const subscribe = () =>
+      fetch("/api/feedback")
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+        setApplicationFeedback(data);
+        setTimeout(subscribe, 1000);
       });
-      app.on("error", err => {
-        console.error(err.message);
-      });
-      app.on("processing_error", err => {
-        console.error(err.message);
-      });
-      app.on("timeout_error", err => {
-        console.error(err.message);
-      });
-      app.start();
-
-      return () => app.stop();
-    },
-    [] // never recreate consumer between rerenders
+    subscribe();
+  }, [] // dont run this effect more than once, even on rerender
   );
   return [applicationFeedback, setApplicationFeedback];
 };

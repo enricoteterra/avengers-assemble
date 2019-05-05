@@ -7,7 +7,7 @@ require("aws-sdk").config.update({
 
 const Producer = require("sqs-producer");
 const producer = Producer.create({
-  queueUrl: process.env.AWS_ROSTER_APPLICATION_FEEDBACK_URL,
+  queueUrl: process.env.AWS_ROSTER_APPLICATION_SUBMISSIONS_URL,
   region: process.env.AWS_REGION,
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
@@ -18,7 +18,7 @@ var bodyParser = require("body-parser");
 var app = express();
 app.use(bodyParser.json());
 app.post("/api/application", (req, res) => {
-  console.log(`received application: ${req.body.name}`);
+  console.log(`submitting application: ${req.body.name}`)
   producer.send(req.body.name, err =>
     err
       ? res.status(err.statusCode || 500).send({ fault: err.message })
@@ -37,8 +37,10 @@ app.listen(port, function() {
 var { Consumer } = require("sqs-consumer");
 const consumer = Consumer.create({
   queueUrl: process.env.AWS_ROSTER_APPLICATION_FEEDBACK_URL,
-  handleMessage: ({ Body, MessageAttributes }) =>
-    longpoll.publish("/api/feedback", {
+  handleMessage: ({ Body, MessageAttributes }) => {
+    console.log(`handling feedback: ${Body}, ${MessageAttributes}`);
+    if (MessageAttributes === undefined) return;
+    return longpoll.publish("/api/feedback", {
       name: Body,
       decision: MessageAttributes.decision
         ? MessageAttributes.decision.StringValue
@@ -46,7 +48,8 @@ const consumer = Consumer.create({
       fault: MessageAttributes.fault
         ? MessageAttributes.fault.StringValue
         : undefined
-    }),
+    });
+  },
   messageAttributeNames: ["decision", "fault"]
 });
 consumer.on("error", err => {

@@ -2,7 +2,11 @@
   "name": "root",
   "private": true,
   "scripts": {
-    "start": "concurrently \"cd packages/avenger-signup-api && npm start\" \"cd packages/signup-approval-service && npm start\""
+    "start": "concurrently \"npm run start:signup-api\" \"npm run start:roster-api\" \"npm run start:signup-approval-service\" \"npm run start:signup-web\"",
+    "start:signup-api": "cd packages/avenger-signup-api && npm start",
+    "start:roster-api": "cd packages/avenger-roster-api && npm start",
+    "start:signup-web": "cd packages/avenger-signup-web && npm start",
+    "start:signup-approval-service": "cd packages/signup-approval-service && npm start"
   },
   "devDependencies": {
     "concurrently": "^4.1.0",

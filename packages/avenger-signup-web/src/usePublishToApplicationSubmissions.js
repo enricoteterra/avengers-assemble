@@ -1,9 +1,9 @@
 export const sendApplication = name => {
-  fetch("/application", {
+  fetch("/api/application", {
     method: "post",
     headers: { "Content-Type": "application/json" },
-    body: {
-      name
-    }
+    body: JSON.stringify({
+      name: name
+    })
   });
 };

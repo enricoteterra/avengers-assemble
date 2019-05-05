@@ -20,7 +20,6 @@ function App() {
     setName("");
   }
   function handleClose(e) {
-    sendApplication(name);
     setApplicationFeedback("");
   }
 

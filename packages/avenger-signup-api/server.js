@@ -14,16 +14,16 @@ const producer = Producer.create({
 });
 
 var express = require("express");
+var bodyParser = require("body-parser");
 var app = express();
-app.post("/application", (req, res) => {
-  console.log(`posted application: ${req.query.name}`);
-  producer.send(req.query.name, function(err) {
-    if (err){ 
-      console.log(err);
-      res.sendStatus(500)
-    }
-  });
-  res.sendStatus(200)
+app.use(bodyParser.json());
+app.post("/api/application", (req, res) => {
+  console.log(`received application: ${req.body.name}`);
+  producer.send(req.body.name, err =>
+    err
+      ? res.status(err.statusCode || 500).send({ fault: err.message })
+      : res.sendStatus(200)
+  );
 });
 
 // var longpoll = require("express-longpoll")(app);

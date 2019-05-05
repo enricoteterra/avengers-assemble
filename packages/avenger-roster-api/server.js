@@ -6,7 +6,10 @@ var app = express();
 app.use(bodyParser.json());
 
 var longpoll = require("express-longpoll")(app, { DEBUG: true });
-longpoll.create("/roster/members");
+longpoll.create("/roster/members", function(req, res, next) {
+  // @TODO: implement proper waittimeseconds handling
+  req.query.waittimeseconds === undefined ? next() : res.send({ roster });
+});
 
 var port = 3021;
 app.listen(port, function() {

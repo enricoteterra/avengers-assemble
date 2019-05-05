@@ -1,19 +1,19 @@
 import React, { useState } from "react";
 import { usePublishToApplicationSubmissions } from "./usePublishToApplicationSubmissions";
 import { useSubscribeToApplicationFeedback } from "./useSubscribeToApplicationFeedback";
+import { useSubscribeToRoster } from "./useSubscribeToRoster";
 import logo from "./logo.svg";
 import "./App.css";
 
 function App() {
   const [name, setName] = useState();
   const [submissionToken, setSubmissionToken] = useState();
-  const [
-    submitApplication
-  ] = usePublishToApplicationSubmissions();
+  const [submitApplication] = usePublishToApplicationSubmissions();
   const [
     applicationFeedback,
     setApplicationFeedback
   ] = useSubscribeToApplicationFeedback(submissionToken);
+  const [roster] = useSubscribeToRoster();
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -33,6 +33,13 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
       </header>
+
+      <div className="roster">
+        <h2>Current Roster</h2>
+        {roster.length > 0 ? roster.map(member => (
+          <p key={member}>{member}</p>
+        )): <p>no avengers signed up yet!</p>}
+      </div>
 
       <form className="signup-form" onSubmit={handleSubmit}>
         <h2>Become an Avenger today!</h2>

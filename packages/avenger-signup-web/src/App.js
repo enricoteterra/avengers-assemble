@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { usePublishToApplicationSubmissions } from "./usePublishToApplicationSubmissions";
+import { sendApplication } from "./usePublishToApplicationSubmissions";
 import { useSubscribeToApplicationFeedback } from "./useSubscribeToApplicationFeedback";
 import logo from "./logo.svg";
 import "./App.css";
@@ -9,7 +9,6 @@ function App() {
     applicationFeedback,
     setApplicationFeedback
   ] = useSubscribeToApplicationFeedback();
-  const sendApplication = usePublishToApplicationSubmissions();
   const [name, setName] = useState("");
 
   function handleNameChange(e) {

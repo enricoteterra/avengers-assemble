@@ -15,11 +15,15 @@ const producer = Producer.create({
 
 var express = require("express");
 var app = express();
-app.post("/application", (req, _) => {
+app.post("/application", (req, res) => {
   console.log(`posted application: ${req.query.name}`);
-  producer.send(name, function(err) {
-    if (err) console.log(err);
+  producer.send(req.query.name, function(err) {
+    if (err){ 
+      console.log(err);
+      res.sendStatus(500)
+    }
   });
+  res.sendStatus(200)
 });
 
 // var longpoll = require("express-longpoll")(app);

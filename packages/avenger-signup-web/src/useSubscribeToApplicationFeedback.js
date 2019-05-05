@@ -17,7 +17,9 @@ export const useSubscribeToApplicationFeedback = initialValue => {
         handleMessage: ({ Body, MessageAttributes }) =>
           setApplicationFeedback({
             name: Body,
-            decision: MessageAttributes.decision.StringValue,
+            decision: MessageAttributes.decision
+              ? MessageAttributes.decision.StringValue
+              : undefined,
             fault: MessageAttributes.fault
               ? MessageAttributes.fault.StringValue
               : undefined

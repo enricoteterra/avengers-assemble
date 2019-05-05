@@ -26,22 +26,36 @@ app.post("/api/application", (req, res) => {
   );
 });
 
-// var longpoll = require("express-longpoll")(app);
-// longpoll.create("/feedback");
+var longpoll = require("express-longpoll")(app, { DEBUG: true });
+longpoll.create("/api/feedback");
 
 var port = 3020;
 app.listen(port, function() {
   console.log(`Listening on port ${port}`);
 });
 
-// do queue stuff
-// var data = { text: "Some data" };
-
-// Publishes data to all clients long polling /poll endpoint
-// You need to call this AFTER you make a GET request to /poll
-// longpoll.publish("/poll", data);
-
-// Publish every 5 seconds
-// setInterval(function() {
-//   longpoll.publish("/poll", data);
-// }, 5000);
+var { Consumer } = require("sqs-consumer");
+const consumer = Consumer.create({
+  queueUrl: process.env.AWS_ROSTER_APPLICATION_FEEDBACK_URL,
+  handleMessage: ({ Body, MessageAttributes }) =>
+    longpoll.publish("/api/feedback", {
+      name: Body,
+      decision: MessageAttributes.decision
+        ? MessageAttributes.decision.StringValue
+        : undefined,
+      fault: MessageAttributes.fault
+        ? MessageAttributes.fault.StringValue
+        : undefined
+    }),
+  messageAttributeNames: ["decision", "fault"]
+});
+consumer.on("error", err => {
+  console.error(err.message);
+});
+consumer.on("processing_error", err => {
+  console.error(err.message);
+});
+consumer.on("timeout_error", err => {
+  console.error(err.message);
+});
+consumer.start();

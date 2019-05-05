@@ -5,7 +5,7 @@ proof of concept application using AWS SQS and long polling
 ## Demo
 using two incognito browser that don't share any local state
 
-![Avengers assemble demo](demo.gif)
+![Avengers assemble demo](browser-demo.gif)
 
 ## Diagram
 ![Avengers assemble diagram](diagram.svg)

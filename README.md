@@ -1,9 +1,14 @@
 # Avengers, Assemble!
 
-proof of concept application using AWS SQS and long polling
+proof of concept web-app using AWS SQS and long polling.
+
+- the approval service will return `[approval denied]` when users try to sign up using the name of a known avenger, e.g. `Thor` or `Black Widow`.
+- approval messages are only sent to the browser that initiated the sign-up
+
+- SQS default configuration, except `Default Visibility Timeout` which needs to be set to 0 seconds so that messages that enter the queue are immediately visible.
 
 ## Demo
-using two incognito browser that don't share any local state
+using two browsers that don't share any local state:
 
 ![Avengers assemble demo](browser-demo.gif)
 

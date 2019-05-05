@@ -17,7 +17,9 @@ const producer = Producer.create({
 const { Consumer } = require("sqs-consumer");
 const consumer = Consumer.create({
   queueUrl: process.env.AWS_ROSTER_APPLICATION_SUBMISSIONS_URL,
-  handleMessage: async ({ Body }) => {
+  messageAttributeNames: ["submissionToken"],
+  handleMessage: async (message) => {
+    const {MessageId, Body, MessageAttributes} = message;
     console.log(`received: ${Body}`);
     blacklist = [
       "thor",
@@ -32,9 +34,13 @@ const consumer = Consumer.create({
       console.log(`denied: ${Body}`);
       producer.send(
         {
-          id: Body,
+          id: MessageId,
           body: Body,
           messageAttributes: {
+            submissionToken: {
+              DataType: "String",
+              StringValue: MessageAttributes.submissionToken.StringValue
+            },
             decision: {
               DataType: "String",
               StringValue: "denied"
@@ -53,9 +59,13 @@ const consumer = Consumer.create({
       console.log(`approved: ${Body}`);
       producer.send(
         {
-          id: Body,
+          id: MessageId,
           body: Body,
           messageAttributes: {
+            submissionToken: {
+              DataType: "String",
+              StringValue: MessageAttributes.submissionToken.StringValue
+            },
             decision: {
               DataType: "String",
               StringValue: "approved"

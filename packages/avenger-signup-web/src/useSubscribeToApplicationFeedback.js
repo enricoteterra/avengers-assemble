@@ -7,19 +7,18 @@ AWS.config.update({
   secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY
 });
 
-export const useSubscribeToApplicationFeedback = initialValue => {
-  const [applicationFeedback, setApplicationFeedback] = useState(initialValue);
+export const useSubscribeToApplicationFeedback = submissionToken => {
+  const [applicationFeedback, setApplicationFeedback] = useState();
   useEffect(() => {
     const subscribe = () =>
-      fetch("/api/feedback")
-      .then(response => response.json())
-      .then(data => {
-        console.log(data)
-        setApplicationFeedback(data);
-        setTimeout(subscribe, 1000);
-      });
+      !submissionToken ||
+      fetch(`/api/feedback/${submissionToken}`)
+        .then(response => response.json())
+        .then(data => {
+          setApplicationFeedback(data);
+          setTimeout(subscribe, 1000);
+        });
     subscribe();
-  }, [] // dont run this effect more than once, even on rerender
-  );
+  }, [submissionToken]);
   return [applicationFeedback, setApplicationFeedback];
 };

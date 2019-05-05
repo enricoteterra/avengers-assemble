@@ -1,23 +1,28 @@
 import React, { useState } from "react";
-import { sendApplication } from "./usePublishToApplicationSubmissions";
+import { usePublishToApplicationSubmissions } from "./usePublishToApplicationSubmissions";
 import { useSubscribeToApplicationFeedback } from "./useSubscribeToApplicationFeedback";
 import logo from "./logo.svg";
 import "./App.css";
 
 function App() {
+  const [name, setName] = useState();
+  const [submissionToken, setSubmissionToken] = useState();
+  const [
+    submitApplication
+  ] = usePublishToApplicationSubmissions();
   const [
     applicationFeedback,
     setApplicationFeedback
-  ] = useSubscribeToApplicationFeedback();
-  const [name, setName] = useState("");
+  ] = useSubscribeToApplicationFeedback(submissionToken);
 
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const token = await submitApplication(name);
+    setSubmissionToken(token);
+    setName("");
+  }
   function handleNameChange(e) {
     setName(e.target.value);
-  }
-  function handleSubmit(e) {
-    e.preventDefault();
-    sendApplication(name);
-    setName("");
   }
   function handleClose(e) {
     setApplicationFeedback("");
@@ -28,7 +33,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
       </header>
-        
+
       <form className="signup-form" onSubmit={handleSubmit}>
         <h2>Become an Avenger today!</h2>
         <input
@@ -41,14 +46,14 @@ function App() {
       </form>
 
       {applicationFeedback && (
-          <div className={`feedback ${applicationFeedback.decision}`}>
-            {applicationFeedback.decision}!&nbsp;
-            {applicationFeedback.fault}
-            <span className="closeButton" onClick={handleClose}>
-              (close)
-            </span>
-          </div>
-        )}
+        <div className={`feedback ${applicationFeedback.decision}`}>
+          {applicationFeedback.decision}!&nbsp;
+          {applicationFeedback.fault}
+          <span className="closeButton" onClick={handleClose}>
+            (close)
+          </span>
+        </div>
+      )}
     </div>
   );
 }

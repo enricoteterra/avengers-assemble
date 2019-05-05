@@ -1,7 +1,11 @@
 {
   "name": "root",
   "private": true,
+  "scripts": {
+    "start": "concurrently \"cd packages/avenger-signup-api && npm start\" \"cd packages/signup-approval-service && npm start\""
+  },
   "devDependencies": {
+    "concurrently": "^4.1.0",
     "lerna": "^3.13.4"
   }
 }

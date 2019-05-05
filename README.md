@@ -3,7 +3,12 @@
 proof of concept application using AWS SQS and long polling
 
 ## Demo
+using two incognito browser that don't share any local state
+
 ![Avengers assemble demo](demo.gif)
+
+## Diagram
+![Avengers assemble diagram](diagram.svg)
 
 ## Setup
 Create the following environment files:
@@ -48,4 +53,4 @@ AWS_ROSTER_APPLICATION_FEEDBACK_URL
 AWS_ROSTER_APPLICATION_ROSTER_URL=
 ```
 
-then `npm run start` from the root
+then `npm i && npm run start` from the root

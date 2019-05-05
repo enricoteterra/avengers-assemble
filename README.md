@@ -38,7 +38,7 @@ AWS_ROSTER_APPLICATION_FEEDBACK_URL=
 ```
 
 ```
-/packages/avenger-signup-web/.env.development.local
+/packages/avenger-web/.env.development.local
 
 AWS_REGION=
 AWS_SECRET_ACCESS_KEY=

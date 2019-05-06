@@ -16,6 +16,8 @@ using two browsers that don't share any local state:
 ![Avengers assemble diagram](diagram.svg)
 
 ## Setup
+on AWS, create 3 SQS Queues (standard, not FIFO) named: roster, application-submissions, application-feedback
+
 Create the following environment files:
 
 ```

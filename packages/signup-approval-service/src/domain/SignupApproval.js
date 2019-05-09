@@ -1,6 +1,7 @@
 import { NotAMinorRule, MostlyOnEarthRule, FightsBaddiesRule } from "./Rules";
 
 // signup approval understands if someone is eligible to sign up
+// @TODO: maybe this could be our fact(signup) sheet?
 export class SignupApproval {
   // @todo: this map should disappear into a fact class
   ruleAppliedOn = {

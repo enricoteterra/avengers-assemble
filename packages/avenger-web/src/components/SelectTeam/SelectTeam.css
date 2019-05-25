@@ -1,0 +1,23 @@
+.select-team {
+  display: flex;
+  justify-content: center;
+  margin: 20px;
+}
+.select-team .team {
+  width: 35px;
+  height: 35px;
+  margin: 5px;
+  cursor: pointer;
+  opacity: 0.4;
+  filter: alpha(opacity=40);
+  transition: opacity 0.2s ease-in 0.2s;
+}
+.select-team .team.selected {
+  opacity: 1;
+  filter: alpha(opacity=100);
+}
+.select-team .team.no-selection {
+  width: 20px;
+  height: 20px;
+  padding: 7.5px;
+}

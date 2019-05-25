@@ -18,7 +18,7 @@ var bodyParser = require("body-parser");
 var app = express();
 app.use(bodyParser.json());
 app.post("/signup/application/:token", (req, res) => {
-  console.log(`submitting application: ${req.body.name}`);
+  console.log(`submitting application: ${JSON.stringify(req.body)}`);
   producer.send(
     {
       id: req.params.token,
@@ -27,6 +27,14 @@ app.post("/signup/application/:token", (req, res) => {
         submissionToken: {
           DataType: "String",
           StringValue: req.params.token
+        },
+        name: {
+          DataType: "String",
+          StringValue: req.body.name
+        },
+        team: {
+          DataType: "String",
+          StringValue: req.body.team
         }
       }
     },

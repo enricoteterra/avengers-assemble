@@ -15,10 +15,14 @@ function App() {
 
       <div className="roster">
         <h2>Current Roster</h2>
-        {roster.length > 0 ? roster.map(member => <p key={member}>{member}</p>) : <p>no avengers signed up yet!</p>}
+        {roster.length > 0 ? (
+          roster.map(({ name, team }) => <p key={`${name}-${team}`}>{`${name}-${team}`}</p>)
+        ) : (
+          <p>no avengers signed up yet!</p>
+        )}
       </div>
 
-      <SignupForm/>
+      <SignupForm />
     </div>
   );
 }

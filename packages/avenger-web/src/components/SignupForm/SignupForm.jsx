@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import SelectTeam from "../SelectTeam";
+import SelectTeam from "./SelectTeam";
 import { withSignupEffects } from "./withSignupEffects";
 import './SignupForm.css'
 

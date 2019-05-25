@@ -23,10 +23,10 @@ const rosterProducer = Producer.create({
 const { Consumer } = require("sqs-consumer");
 const consumer = Consumer.create({
   queueUrl: process.env.AWS_ROSTER_APPLICATION_SUBMISSIONS_URL,
-  messageAttributeNames: ["submissionToken"],
+  messageAttributeNames: ["submissionToken", "name", "team"],
   handleMessage: async (message) => {
     const {MessageId, Body, MessageAttributes} = message;
-    console.log(`received: ${Body}`);
+    console.log(`received: ${Body}, ${JSON.stringify(MessageAttributes)}`);
     blacklist = [
       "thor",
       "loki",
@@ -36,7 +36,11 @@ const consumer = Consumer.create({
       "iron man",
       "hawkeye"
     ];
-    if (blacklist.includes(Body.toLowerCase())) {
+    if( !MessageAttributes || MessageAttributes.name === undefined || MessageAttributes.team === undefined) {
+      console.log("received event malformed");
+      return;
+    }
+    if (blacklist.includes(MessageAttributes.name.StringValue.toLowerCase())) {
       console.log(`denied: ${Body}`);
       feedbackProducer.send(
         {
@@ -47,13 +51,21 @@ const consumer = Consumer.create({
               DataType: "String",
               StringValue: MessageAttributes.submissionToken.StringValue
             },
+            name: {
+              DataType: "String",
+              StringValue: MessageAttributes.name.StringValue
+            },
+            team: {
+              DataType: "String",
+              StringValue: MessageAttributes.team.StringValue
+            },
             decision: {
               DataType: "String",
               StringValue: "denied"
             },
             fault: {
               DataType: "String",
-              StringValue: `Name ${Body} is already taken`
+              StringValue: `Name '${Body}' is already taken`
             }
           }
         },
@@ -72,6 +84,14 @@ const consumer = Consumer.create({
               DataType: "String",
               StringValue: MessageAttributes.submissionToken.StringValue
             },
+            name: {
+              DataType: "String",
+              StringValue: MessageAttributes.name.StringValue
+            },
+            team: {
+              DataType: "String",
+              StringValue: MessageAttributes.team.StringValue
+            },
             decision: {
               DataType: "String",
               StringValue: "approved"
@@ -85,7 +105,17 @@ const consumer = Consumer.create({
       rosterProducer.send(
         {
           id: MessageId,
-          body: Body
+          body: Body,
+          messageAttributes: {
+            name: {
+              DataType: "String",
+              StringValue: MessageAttributes.name.StringValue
+            },
+            team: {
+              DataType: "String",
+              StringValue: MessageAttributes.team.StringValue
+            }
+          }
         },
         function(err) {
           if (err) console.log(err);

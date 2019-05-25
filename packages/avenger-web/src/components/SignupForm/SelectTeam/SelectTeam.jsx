@@ -1,8 +1,8 @@
 import React from 'react';
 import {SelectableImage} from './Flag';
-import {flags} from '../../assets/flags';
+import {flags} from '../../../assets/flags';
 import './SelectTeam.css';
-import QuestionMarkImage from '../../assets/question-mark.png'
+import QuestionMarkImage from '../../../assets/question-mark.png'
 
 export const SelectTeam = ({selected, handleChange}) => (
   <div className="select-team">

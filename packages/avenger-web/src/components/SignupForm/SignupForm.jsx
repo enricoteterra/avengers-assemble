@@ -4,8 +4,8 @@ import { withSignupEffects } from "./withSignupEffects";
 import './SignupForm.css'
 
 const BecomeAvengerForm = ({dispatchSignup, renderFeedback, renderError}) => {
-  const [name, setName] = useState();
-  const [team, setTeam] = useState();
+  const [name, setName] = useState("");
+  const [team, setTeam] = useState("");
 
   function handleNameChange(e) {
     setName(e.target.value);
@@ -26,7 +26,7 @@ const BecomeAvengerForm = ({dispatchSignup, renderFeedback, renderError}) => {
       {renderError}
       {renderFeedback}
       <SelectTeam selected={team} handleChange={handleTeamChange} />
-      <input autoFocus name="avenger-name" value={name} onChange={handleNameChange} />
+      <input type="text" autoFocus value={name} onChange={handleNameChange} />
       <button type="submit">Sign up</button>
     </form>
   );

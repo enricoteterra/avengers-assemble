@@ -4,7 +4,6 @@ import { useSubscribeToApplicationFeedback } from "../../useSubscribeToApplicati
 
 export const withSignupEffects = WrappedComponent => props => {
 
-  
   const [submissionToken, setSubmissionToken] = useState();
   const [submissionError, setSubmissionError] = useState();
 

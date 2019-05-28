@@ -1,0 +1,35 @@
+.App {
+  margin: 2em;
+  text-align: center;
+}
+
+.App-logo {
+  height: 20vmin;
+  pointer-events: none;
+}
+
+.App-header {
+  background-color:white;
+  color: #aaa;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+.feedback {
+  margin-top: 2em;
+}
+
+.feedback.approved {
+  color: green;
+}
+
+.feedback.denied {
+  color: red;
+}
+
+.closeButton {
+  padding: 0em 1em;
+  cursor: pointer;
+}

@@ -1,2 +1,3 @@
-packages/avenger-web/src/App.js
+packages/avenger-signup-web/src/App.js
+packages/avenger-roster-web/src/App.js
 **/*.jsx
